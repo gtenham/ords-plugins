@@ -1,5 +1,6 @@
 # ords-plugins
-Oracle ORDS plugins
+This project is a mavenized format for developing [Oracle ORDS plugins](http://download.oracle.com/otndocs/java/javadocs/3.0/plugin-api/getting-started.html)
+
 
 ## Prerequisites
 * [git](http://git-scm.com/)
@@ -42,4 +43,11 @@ Do the same with the downloaded freemarker.jar (which is a dependency for the or
 
 ``` shell
 java -jar ords.war plugin freemarker.jar
+```
+
+Freemarker templates are loaded from the filesystem. To configure a base path add te following
+ords entry to your ORDS installation (config/ords/defaults.xml):
+
+```xml
+<entry key="templating.rootpath">/path/to/templates</entry>
 ```
