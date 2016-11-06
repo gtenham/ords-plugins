@@ -51,14 +51,23 @@
                 <version>1</version>
                 <scope>provided</scope>
             </dependency>
-
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>18.0</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- Custom artifacts used in plugins -->
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.25-incubating</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>4.0.3</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
