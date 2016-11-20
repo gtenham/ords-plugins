@@ -36,7 +36,7 @@ Assuming that ORDS is installed and configured you can add the separate plugins 
 using:
 
 ``` shell
-java -jar ords.war plugin ords-templating-x.x.x.jar
+java -jar ords.war plugin ords-templating.jar
 ```
 
 Do the same with the downloaded freemarker.jar (which is a dependency for the ords-templating plugin):

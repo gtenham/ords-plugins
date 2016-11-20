@@ -1,5 +1,6 @@
 package nl.gertontenham.ords.templates.http;
 
+import nl.gertontenham.ords.templates.db.DBInstaller;
 import nl.gertontenham.ords.templates.db.PLSQLWriterService;
 import oracle.dbtools.plugin.api.di.annotations.Provides;
 import oracle.dbtools.plugin.api.http.annotations.Dispatches;
@@ -13,16 +14,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * ORDS Plsql calling servlet endpoint
  */
 @Provides
-@Dispatches(@PathTemplate("/owa/:package-name"))
+@Dispatches({
+        @PathTemplate(name="normal", value="/owa/:package-name"),
+        @PathTemplate(name="install", value="/owa-db-install")})
 public class OwaServlet extends HttpServlet {
 
     private final PLSQLWriterService plsqlWriterService;
@@ -36,27 +41,41 @@ public class OwaServlet extends HttpServlet {
         this.logger = logger;
     }
 
+    private void installDB() {
+        try {
+            DBInstaller.migrate(plsqlWriterService.getConnection());
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error during installing database objects ");
+        }
+    }
+
     private void dispatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final PathTemplateMatch match = pathTemplates.matchedTemplate(request);
-        final String[] splitContext = request.getContextPath().split("/");
-        final String uriPattern = splitContext[splitContext.length-1];
-        final String packageName = match.parameters().get("package-name");
 
-        Map<String, String[]> requestParameters = buildParameters(request);
-        Map<String, String[]> headerParameters = buildHeaders(request);
+        if (match.name().equals("install")) {
+            installDB();
+            response.sendError(HttpServletResponse.SC_ACCEPTED,"Installed db");
+        } else {
+            final String[] splitContext = request.getContextPath().split("/");
+            final String uriPattern = splitContext[splitContext.length - 1];
+            final String packageName = match.parameters().get("package-name");
 
-        Map<String, Object> templateMap = plsqlWriterService.getFmHelper().getRequestData(request);
+            Map<String, String[]> requestParameters = buildParameters(request);
+            Map<String, String[]> headerParameters = buildHeaders(request);
 
-        try {
+            Map<String, Object> templateMap = plsqlWriterService.getFmHelper().getRequestData(request);
 
-            plsqlWriterService
-                    .fetchSchemaOwner(uriPattern)
-                    .executeAsCursor(headerParameters, requestParameters, packageName)
-                    .writeTemplate(templateMap, response.getWriter());
+            try {
 
-        } catch (IOException e) {
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                plsqlWriterService
+                        .fetchSchemaOwner(uriPattern)
+                        .executeAsCursor(headerParameters, requestParameters, packageName)
+                        .writeTemplate(templateMap, response.getWriter());
+
+            } catch (IOException e) {
+                if (!response.isCommitted()) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                }
             }
         }
     }

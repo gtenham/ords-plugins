@@ -13,6 +13,11 @@
     <name>ORDS Templating Plugin Module</name>
     <description>ORDS plugin module providing templating</description>
 
+    <build>
+        <finalName>${project.artifactId}</finalName>
+    </build>
+
+
     <dependencies>
         <dependency>
             <groupId>oracle.dbtools</groupId>

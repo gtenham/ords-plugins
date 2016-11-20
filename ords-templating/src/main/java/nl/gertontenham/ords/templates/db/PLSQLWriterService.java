@@ -99,6 +99,10 @@ public class PLSQLWriterService {
         return fmHelper;
     }
 
+    public Connection getConnection() {
+        return conn;
+    }
+
     private List<HashMap<String,GenericData>> convertResultSetToList(ResultSet rs) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
