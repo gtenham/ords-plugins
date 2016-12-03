@@ -107,10 +107,10 @@ public class OwaServlet extends HttpServlet {
                     requestParameters = buildParametersFromMultipart(request, uploadItems);
 
                     if (uploadItems.size() > 0) {
-                        for (int i = 0; i < uploadItems.size(); i++) {
+                        for (BinaryFile uploadItem : uploadItems ) {
                             plsqlCallService
                                     .fetchSchemaOwner(uriPattern)
-                                    .executeAsBinaryUpload(headerParameters, requestParameters, packageName,uploadItems.get(i));
+                                    .executeAsBinaryUpload(headerParameters, requestParameters, packageName, uploadItem);
                         }
                     }
                     response.sendError(HttpServletResponse.SC_NO_CONTENT);

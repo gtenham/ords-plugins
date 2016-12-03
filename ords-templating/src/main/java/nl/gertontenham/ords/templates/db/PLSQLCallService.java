@@ -82,7 +82,7 @@ public class PLSQLCallService {
 
             oracleCallableStatement.close();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error during download call in package " + owner + "." + packageName,e);
+            logger.log(Level.SEVERE, "Error during download call in package " + owner + "." + packageName);
             throw new NotFoundException();
         }
         return this;
@@ -117,7 +117,7 @@ public class PLSQLCallService {
             oracleCallableStatement.close();
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error during upload call in package " + owner + "." + packageName,e);
+            logger.log(Level.SEVERE, "Error during upload call in package " + owner + "." + packageName);
             throw new NotFoundException();
         }
         return this;
@@ -157,7 +157,7 @@ public class PLSQLCallService {
             oracleCallableStatement.close();
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error during execute call in package " + owner + "." + packageName,e);
+            logger.log(Level.SEVERE, "Error during execute call in package " + owner + "." + packageName);
             throw new NotFoundException();
         }
 
