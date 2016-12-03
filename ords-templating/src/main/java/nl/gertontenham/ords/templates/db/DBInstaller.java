@@ -26,7 +26,7 @@ public class DBInstaller {
             stmt = conn.createStatement();
             for (String sql: statements) {
                 String[] sqlLines = sql.trim()
-                                       .split("\n");
+                        .split("\n");
                 StringBuffer sb = new StringBuffer();
                 for (String line: sqlLines) {
                     sb.append(line + "\n ");
@@ -42,7 +42,33 @@ public class DBInstaller {
         } finally {
             if (stmt != null) { stmt.close(); }
         }
+    }
 
+    public static void example(Connection conn) throws SQLException {
+        Statement stmt = null;
+        try {
+            URL path = Resources.getResource("db/owa-tester.sql");
+            String script = Resources.toString(path, Charsets.UTF_8);
+            final String[] statements = script.split("\\$\\$");
 
+            stmt = conn.createStatement();
+            for (String sql: statements) {
+                String[] sqlLines = sql.trim()
+                        .split("\n");
+                StringBuffer sb = new StringBuffer();
+                for (String line: sqlLines) {
+                    sb.append(line + "\n ");
+                }
+                stmt.addBatch(sb.toString());
+            }
+            stmt.executeBatch();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
     }
 }

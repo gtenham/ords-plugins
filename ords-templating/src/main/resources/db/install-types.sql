@@ -4,6 +4,10 @@ drop type multivalued_type$$
 
 drop type namevalues_type$$
 
+drop type downloadable_type$$
+
+drop type binary_type$$
+
 create or replace type values_type as table of varchar2(32760)$$
 
 create or replace type namevalues_type as object(
@@ -21,6 +25,18 @@ create or replace type multivalued_parameter_type as object(
    ,member function value_exists_for(p_name varchar2) return pls_integer
 
    ,member procedure add_value(p_name varchar2, p_value varchar2)
+)$$
+
+create or replace type binary_type as object(
+    m_buffer      blob
+   ,m_filesize    number(38,0)
+   ,m_filename    varchar2(512)
+   ,m_contenttype varchar2(2000)
+)$$
+
+create or replace type downloadable_type as object(
+    m_binary_file      binary_type
+   ,m_content_disposition    varchar2(25)
 )$$
 
 create or replace type body multivalued_parameter_type is
